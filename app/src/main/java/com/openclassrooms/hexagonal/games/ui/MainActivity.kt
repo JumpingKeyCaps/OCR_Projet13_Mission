@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.auth.AuthenticationScreen
-import com.openclassrooms.hexagonal.games.screen.auth.MyAccountScreen
+import com.openclassrooms.hexagonal.games.screen.account.MyAccountScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
