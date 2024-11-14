@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -47,6 +48,15 @@ import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 
+/**
+ * Homefeed screen composable function.
+ * @param modifier The modifier for the homefeed screen.
+ * @param viewModel The view model for the homefeed screen.
+ * @param onPostClick The action to perform when a post is clicked.
+ * @param onSettingsClick The action to perform when the settings button is clicked.
+ * @param onMyAccountClick The action to perform when the my account button is clicked.
+ * @param onFABClick The action to perform when the floating action button is clicked.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomefeedScreen(
@@ -54,6 +64,7 @@ fun HomefeedScreen(
   viewModel: HomefeedViewModel = hiltViewModel(),
   onPostClick: (Post) -> Unit = {},
   onSettingsClick: () -> Unit = {},
+  onMyAccountClick: () -> Unit = {},
   onFABClick: () -> Unit = {},
 ) {
   var showMenu by rememberSaveable { mutableStateOf(false) }
@@ -73,17 +84,32 @@ fun HomefeedScreen(
             )
           }
           DropdownMenu(
+            modifier = Modifier.width(200.dp),
             expanded = showMenu,
             onDismissRequest = { showMenu = false }
           ) {
+            //My Account Menu Item
+            DropdownMenuItem(
+              onClick = {
+                onMyAccountClick()
+                showMenu = false
+              },
+              text = {
+                Text(text = stringResource(id = R.string.action_MyAccount),
+                  textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                  modifier = Modifier.fillMaxWidth())
+              }
+            )
+            //Settings Menu Item
             DropdownMenuItem(
               onClick = {
                 onSettingsClick()
               },
               text = {
                 Text(
-                  text = stringResource(id = R.string.action_settings)
-                )
+                  text = stringResource(id = R.string.action_settings),
+                  textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                  modifier = Modifier.fillMaxWidth())
               }
             )
           }
