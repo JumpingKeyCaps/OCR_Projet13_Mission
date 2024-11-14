@@ -89,7 +89,7 @@ fun AuthenticationScreen(
 
     Box(modifier = Modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize()) {
-            CustomShapeComponent(height = 30f, oscilations = 0, waveHeight = 0.8f)
+            CustomShapeComponent(height = 30f, oscillations = 0, waveHeight = 0.8f)
             // Horizontal Pager for Swiping between sign-in and sign-up screens
             HorizontalPager(
                 state = pagerState,
