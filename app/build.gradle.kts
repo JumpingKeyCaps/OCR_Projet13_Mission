@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.kotlin)
   alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
+  id("com.google.gms.google-services")
 }
 
 android {
@@ -23,6 +24,7 @@ android {
     release {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        signingConfig = signingConfigs.getByName("debug")
     }
   }
   compileOptions {
@@ -46,6 +48,7 @@ dependencies {
 
   //DI
   implementation(libs.hilt)
+  implementation(libs.firebase.auth.ktx)
   ksp(libs.hilt.compiler)
   implementation(libs.hilt.navigation.compose)
 
@@ -71,4 +74,21 @@ dependencies {
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
+
+
+  //FireBase Stuff
+  implementation(platform(libs.firebase.bom))
+  //- analytics
+  implementation(libs.firebase.analytics)
+
+  //- Authentication
+  implementation (libs.firebase.auth)
+  //- UI Authentication
+  implementation (libs.firebase.ui.auth)
+
+  //- compose Pager
+  implementation (libs.accompanist.pager)
+  implementation (libs.accompanist.pager.indicators)
+
+
 }
