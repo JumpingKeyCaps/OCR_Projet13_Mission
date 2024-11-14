@@ -22,6 +22,9 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     private val _signInResult = MutableSharedFlow<Result<FirebaseUser?>>()
     val signInResult: SharedFlow<Result<FirebaseUser?>> get() = _signInResult
 
+    private val _passwordResetResult = MutableSharedFlow<Result<Unit>>()
+    val passwordResetResult: SharedFlow<Result<Unit>> get() = _passwordResetResult
+
     /**
      * Registers a new user with the provided email and password.
      * @param email The email address of the new user.
@@ -58,6 +61,9 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     fun sendPasswordResetEmail(email: String) {
         viewModelScope.launch {
             authRepository.sendPasswordResetEmail(email)
+                .collect { result ->
+                    _passwordResetResult.emit(result)
+                }
         }
     }
 
