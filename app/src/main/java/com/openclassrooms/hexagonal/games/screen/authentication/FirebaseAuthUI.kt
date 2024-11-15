@@ -4,8 +4,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.hexagonal.games.R
@@ -14,8 +16,8 @@ import com.openclassrooms.hexagonal.games.R
 @Composable
 fun FirebaseAuthUI(onAuthSuccess: (String?) -> Unit, onAuthFailure: (Exception?) -> Unit) {
 
-    // Utilise un état pour déclencher le lancement
-    val shouldLaunch = remember { mutableStateOf(false) }
+    // État pour contrôler le lancement unique
+    var hasLaunched by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -37,19 +39,19 @@ fun FirebaseAuthUI(onAuthSuccess: (String?) -> Unit, onAuthFailure: (Exception?)
     val intent = AuthUI.getInstance()
         .createSignInIntentBuilder()
         .setAvailableProviders(providers)
+        .setIsSmartLockEnabled(false, true)
+        .setTosAndPrivacyPolicyUrls("https://example.com/terms", "https://example.com/privacy")
+        .setLogo(R.mipmap.ic_launcher_foreground)
         .setTheme(R.style.Theme_HexagonalGames) // Optionnel : personnalise le thème
         .build()
 
-    // Lancer uniquement après que le composable est prêt
-    LaunchedEffect(shouldLaunch.value) {
-        if (shouldLaunch.value) {
+    // Lancer l'intent uniquement une fois
+    LaunchedEffect(Unit) {
+        if (!hasLaunched) {
             launcher.launch(intent)
-            shouldLaunch.value = false
+            hasLaunched = true // Marque comme lancé
         }
     }
 
-    // Déclenche le lancement
-    if (!shouldLaunch.value) {
-        shouldLaunch.value = true
-    }
+
 }
