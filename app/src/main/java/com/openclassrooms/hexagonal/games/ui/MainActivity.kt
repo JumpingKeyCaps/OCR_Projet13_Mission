@@ -1,6 +1,7 @@
 package com.openclassrooms.hexagonal.games.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
@@ -8,8 +9,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
+import com.openclassrooms.hexagonal.games.screen.authentication.FirebaseAuthUI
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
@@ -27,9 +30,12 @@ class MainActivity : ComponentActivity() {
     
     setContent {
       val navController = rememberNavController()
+
       
       HexagonalGamesTheme {
-        HexagonalGamesNavHost(navHostController = navController)
+        HexagonalGamesNavHost(
+          navHostController = navController,
+          startDestination = if(FirebaseAuth.getInstance().currentUser == null) Screen.Authentication.route else Screen.Homefeed.route)
       }
     }
   }
@@ -37,7 +43,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HexagonalGamesNavHost(navHostController: NavHostController) {
+fun HexagonalGamesNavHost(navHostController: NavHostController, startDestination: String) {
   NavHost(
     navController = navHostController,
     startDestination = Screen.Homefeed.route
@@ -66,5 +72,20 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         onBackClick = { navHostController.navigateUp() }
       )
     }
+
+    composable(route = Screen.Authentication.route) {
+      FirebaseAuthUI(
+        onAuthSuccess = { email ->
+          // Naviguer vers l'écran principal
+          navHostController.navigate(Screen.Homefeed.route)
+        },
+        onAuthFailure = { error ->
+          // Gérer les erreurs
+          Log.d("FbAuthUI", "Authentication failed: ${error?.message}")
+        }
+      )
+    }
+
+
   }
 }
