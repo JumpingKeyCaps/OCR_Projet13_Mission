@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 fun HexagonalGamesNavHost(navHostController: NavHostController, startDestination: String) {
   NavHost(
     navController = navHostController,
-    startDestination = Screen.Homefeed.route
+    startDestination = startDestination
   ) {
     composable(route = Screen.Homefeed.route) {
       HomefeedScreen(
