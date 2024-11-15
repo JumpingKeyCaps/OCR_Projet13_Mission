@@ -3,6 +3,9 @@ package com.openclassrooms.hexagonal.games.screen.authentication
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.hexagonal.games.R
@@ -10,6 +13,10 @@ import com.openclassrooms.hexagonal.games.R
 
 @Composable
 fun FirebaseAuthUI(onAuthSuccess: (String?) -> Unit, onAuthFailure: (Exception?) -> Unit) {
+
+    // Utilise un état pour déclencher le lancement
+    val shouldLaunch = remember { mutableStateOf(false) }
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -33,5 +40,16 @@ fun FirebaseAuthUI(onAuthSuccess: (String?) -> Unit, onAuthFailure: (Exception?)
         .setTheme(R.style.Theme_HexagonalGames) // Optionnel : personnalise le thème
         .build()
 
-    launcher.launch(intent)
+    // Lancer uniquement après que le composable est prêt
+    LaunchedEffect(shouldLaunch.value) {
+        if (shouldLaunch.value) {
+            launcher.launch(intent)
+            shouldLaunch.value = false
+        }
+    }
+
+    // Déclenche le lancement
+    if (!shouldLaunch.value) {
+        shouldLaunch.value = true
+    }
 }
