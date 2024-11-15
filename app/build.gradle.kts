@@ -47,6 +47,7 @@ dependencies {
 
   //DI
   implementation(libs.hilt)
+  implementation(libs.firebase.auth.ktx)
   ksp(libs.hilt.compiler)
   implementation(libs.hilt.navigation.compose)
 
@@ -74,8 +75,8 @@ dependencies {
   androidTestImplementation(libs.espresso.core)
 
   //Firebase
-  implementation("com.google.firebase:firebase-bom:33.5.1")
+  implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
   implementation("com.google.firebase:firebase-analytics:22.1.2")
-  implementation("com.google.firebase:firebase-ui-auth:8.1.0")
+  implementation("com.firebaseui:firebase-ui-auth:8.0.2")
 
 }
