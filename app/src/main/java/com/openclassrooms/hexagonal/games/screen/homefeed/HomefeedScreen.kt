@@ -68,7 +68,7 @@ fun HomefeedScreen(
   onFABClick: () -> Unit = {},
 ) {
   var showMenu by rememberSaveable { mutableStateOf(false) }
-  
+
   Scaffold(
     modifier = modifier,
     topBar = {
