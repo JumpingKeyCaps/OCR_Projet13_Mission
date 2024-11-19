@@ -76,19 +76,21 @@ dependencies {
   androidTestImplementation(libs.espresso.core)
 
 
-  //FireBase Stuff
-  implementation(platform(libs.firebase.bom))
-  //- analytics
-  implementation(libs.firebase.analytics)
+  //- compose Pager
+  implementation (libs.accompanist.pager)
+  implementation (libs.accompanist.pager.indicators)
 
+
+  // --------------- [FireBase Stuff]
+  implementation(platform(libs.firebase.bom))
+  //- Analytics
+  implementation(libs.firebase.analytics)
   //- Authentication
   implementation (libs.firebase.auth)
   //- UI Authentication
   implementation (libs.firebase.ui.auth)
 
-  //- compose Pager
-  implementation (libs.accompanist.pager)
-  implementation (libs.accompanist.pager.indicators)
-
+  //- Messaging
+  implementation (libs.firebase.messaging)
 
 }
