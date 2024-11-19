@@ -1,9 +1,12 @@
 package com.openclassrooms.hexagonal.games.di
 
 import com.openclassrooms.hexagonal.games.data.repository.AuthRepository
+import com.openclassrooms.hexagonal.games.data.repository.PostStoreRepository
+import com.openclassrooms.hexagonal.games.data.repository.UserStoreRepository
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.data.service.PostFakeApi
 import com.openclassrooms.hexagonal.games.data.service.authentication.FirebaseAuthService
+import com.openclassrooms.hexagonal.games.data.service.firestore.FirestoreService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +54,41 @@ class AppModule {
   @Singleton
   fun provideFirebaseAuthService(): FirebaseAuthService {
     return FirebaseAuthService()
+  }
+
+
+  /**
+   * Provides a Singleton instance of FirestoreService.
+   * @return A Singleton instance of FirestoreService.
+   */
+  @Provides
+  @Singleton
+  fun provideFirestoreService(): FirestoreService {
+    return FirestoreService()
+  }
+
+
+  /**
+   * Provides a Singleton instance of UserStoreRepository.
+   * @param storeService The FirestoreService instance.
+   * @return A Singleton instance of UserStoreRepository.
+   */
+  @Provides
+  @Singleton
+  fun provideUserStoreRepository(storeService: FirestoreService): UserStoreRepository {
+    return UserStoreRepository(storeService)
+  }
+
+
+  /**
+   * Provides a Singleton instance of PostStoreRepository.
+   * @param storeService The FirestoreService instance.
+   * @return A Singleton instance of PostStoreRepository.
+   */
+  @Provides
+  @Singleton
+  fun providePostStoreRepository(storeService: FirestoreService): PostStoreRepository {
+    return PostStoreRepository(storeService)
   }
 
 }
