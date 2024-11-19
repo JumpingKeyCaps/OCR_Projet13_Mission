@@ -70,7 +70,9 @@ fun AuthenticationScreen(
     // Check if the sign-in result indicates success or failure
     LaunchedEffect(signInResult) {
         signInResult?.onSuccess { user ->
-            if (user != null) { onNavigateToHomeScreen() } // Success : Navigate to the HomeScreen
+            if (user != null) {
+                onNavigateToHomeScreen() // Success : Navigate to the HomeScreen
+            }
         }?.onFailure { exception ->
             //Failure : Show a snackbar with the error message and unlock the button to retry
             snackBarHostState.showSnackbar("Echec de la connexion: ${exception.message}")
@@ -103,7 +105,7 @@ fun AuthenticationScreen(
                                 pagerState.animateScrollToPage(1) // Navigate to page 1 (SignInScreen)
                             }
                         },
-                        onSignUp = { email, password ->
+                        onSignUp = { email, password, firstName, lastName ->
                             signUpButtonState = false // lock sign up button
                             // Check if the email and password are not empty
                             if (email.isEmpty()) {
@@ -116,9 +118,19 @@ fun AuthenticationScreen(
                                     snackBarHostState.showSnackbar("Veuillez entrer votre mot de passe")
                                     signUpButtonState = true
                                 }
+                            }else if (firstName.isEmpty()){
+                                coroutineScope.launch {
+                                    snackBarHostState.showSnackbar("Veuillez entrer votre Prenom")
+                                    signUpButtonState = true
+                                }
+                            }else if (lastName.isEmpty()){
+                                coroutineScope.launch {
+                                    snackBarHostState.showSnackbar("Veuillez entrer votre Nom")
+                                    signUpButtonState = true
+                                }
                             }else{
                                 //All is ok to create the new account
-                                viewModel.signUpUser(email = email, password = password)
+                                viewModel.signUpUser(email = email, password = password, firstName = firstName, lastName = lastName)
                                 coroutineScope.launch {
                                     snackBarHostState.showSnackbar("Inscription en cours...")
                                 }
@@ -172,7 +184,7 @@ fun AuthenticationScreen(
 
 
         // Custom Dots as bottom Pager Indicator
-        Row( modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 46.dp) ) {
+        Row( modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 26.dp) ) {
             repeat(2) {index ->
                 Surface(
                     modifier = Modifier.width(13.dp).height(13.dp).padding(2.dp),
