@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "907052299276",
+    "project_id": "hexagonalgames-db9c3",
+    "storage_bucket": "hexagonalgames-db9c3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907052299276:android:a2c723897a10befb372a29",
+        "android_client_info": {
+          "package_name": "com.openclassrooms.hexagonal.games"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "907052299276-g39lev7jadgiopj1cpa31jbe8c9ekbgu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.openclassrooms.hexagonal.games",
+            "certificate_hash": "16dc159c089e0b6b55879dfe836e2bd8ed274f99"
+          }
+        },
+        {
+          "client_id": "907052299276-cqvk0h1mjoko8t9lnpkbtuhrqaihcho7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGCBZE5dH_jCtnAEqa5F6S-FNIAxm7wlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "907052299276-cqvk0h1mjoko8t9lnpkbtuhrqaihcho7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
