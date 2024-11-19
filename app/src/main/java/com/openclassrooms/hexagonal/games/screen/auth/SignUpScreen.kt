@@ -48,7 +48,7 @@ import com.openclassrooms.hexagonal.games.ui.theme.Purple80
 @Composable
 fun SignUpScreen(
     onClickGoSignIn: () -> Unit,
-    onSignUp: (String,String) -> Unit,
+    onSignUp: (String,String,String,String) -> Unit,
     signUpButtonState: Boolean = true
 ){
 
@@ -56,9 +56,13 @@ fun SignUpScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    //local state variables for first name/last name
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+
     Column( modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         Image(
             painter = painterResource(id = R.mipmap.ic_launcher_foreground),
@@ -67,7 +71,7 @@ fun SignUpScreen(
             contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         Text(
             "Rejoignez la communauté Hexagonal.",
@@ -86,7 +90,52 @@ fun SignUpScreen(
             color = Purple80,
             modifier = Modifier.padding(30.dp, 5.dp, 30.dp, 0.dp).align(Alignment.CenterHorizontally))
 
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+        // First name field
+        OutlinedTextField(
+            value = firstName,
+            onValueChange = { firstName = it },
+            label = { Text("Prenom", style = MaterialTheme.typography.labelLarge) },
+            placeholder = { Text("Entrez votre Prenom", style = MaterialTheme.typography.labelLarge) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(45.dp, 0.dp, 45.dp, 0.dp),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true,
+            textStyle = MaterialTheme.typography.labelLarge,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Purple80,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        // Last name field
+        OutlinedTextField(
+            value = lastName,
+            onValueChange = { lastName = it },
+            label = { Text("Nom", style = MaterialTheme.typography.labelLarge) },
+            placeholder = { Text("Entrez votre Nom", style = MaterialTheme.typography.labelLarge) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(45.dp, 0.dp, 45.dp, 0.dp),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true,
+            textStyle = MaterialTheme.typography.labelLarge,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Purple80,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
 
         // mail field
         OutlinedTextField(
@@ -109,7 +158,7 @@ fun SignUpScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
         // password field
         OutlinedTextField(
@@ -133,7 +182,6 @@ fun SignUpScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height(0.dp))
 
         //Cgu infos
         Text(
@@ -145,12 +193,12 @@ fun SignUpScreen(
             color = Purple40,
             modifier = Modifier.padding(30.dp, 20.dp, 30.dp, 0.dp).align(Alignment.CenterHorizontally))
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
         // Sign-Up button
         Button(
             onClick = {
-                onSignUp(email, password)
+                onSignUp(email, password, firstName, lastName)
             },
             modifier = Modifier.fillMaxWidth().padding(50.dp, 0.dp, 50.dp, 0.dp).height(50.dp).align(Alignment.CenterHorizontally),
             enabled = signUpButtonState
@@ -158,14 +206,14 @@ fun SignUpScreen(
             Text("S'inscrire")
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         // Sign in with google button
-        GoogleSignInButton(buttonText = "S'inscrire avec Google",modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 0.dp).align(Alignment.CenterHorizontally), onClick = {})
+      //  GoogleSignInButton(buttonText = "S'inscrire avec Google",modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 0.dp).align(Alignment.CenterHorizontally), onClick = {})
 
         // Button to navigate to sign-in screen
         TextButton(modifier = Modifier
-            .padding(0.dp, 15.dp, 0.dp, 0.dp)
+            .padding(0.dp, 5.dp, 0.dp, 0.dp)
             .align(Alignment.CenterHorizontally),
             onClick = {onClickGoSignIn()}
         ) {
@@ -182,5 +230,5 @@ fun SignUpScreen(
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreenPreview(){
-    SignUpScreen(onClickGoSignIn = {},onSignUp = { _, _ ->})
+    SignUpScreen(onClickGoSignIn = {},onSignUp = { _, _,_,_ ->})
 }
