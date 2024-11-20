@@ -1,7 +1,5 @@
 package com.openclassrooms.hexagonal.games.data.service.firestore
 
-import android.util.Log
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
@@ -22,8 +20,6 @@ class FirestoreService {
      * @param onFailure La fonction à exécuter en cas d'échec.
      */
     fun addUser(user: User, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        Log.d("DBUSR", "Service call: add user to DB > with this ID: ${user.id} (${FirebaseAuth.getInstance().currentUser?.uid})")
-
         db.collection("users")
             .document(user.id)  // set user id
             .set(user) // create user or updtate if already exist
@@ -34,8 +30,6 @@ class FirestoreService {
                 onFailure(e)
             }
     }
-
-
 
 
 
