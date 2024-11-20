@@ -44,7 +44,11 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
                         if (user != null) {
                             //Add user in DataBase
                             Log.d("DBUSR", "signUpUser: add user to DB ...")
-                          createUserInDB(User(user.uid,firstName,lastName))
+                            userRepository.addUser(
+                                User(user.uid,firstName,lastName),
+                                {Log.d("DBUSR", "signUpUser: OK ! user is added to DB !")},
+                                {Log.d("DBUSR", "signUpUser: FAIL ! user is not added to DB !")}
+                            )
                         }
 
 
@@ -53,18 +57,6 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
                 }
         }
     }
-
-
-     private fun createUserInDB(user: User){
-         userRepository.addUser(
-             user,
-             {Log.d("DBUSR", "signUpUser: OK ! user is added to DB !")},
-             {Log.d("DBUSR", "signUpUser: FAIL ! user is not added to DB !")}
-         )
-
-     }
-
-
 
 
      /**
