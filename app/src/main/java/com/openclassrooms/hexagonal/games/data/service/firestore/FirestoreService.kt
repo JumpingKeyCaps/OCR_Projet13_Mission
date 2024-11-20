@@ -11,7 +11,7 @@ import com.openclassrooms.hexagonal.games.domain.model.User
  */
 class FirestoreService {
 
-    private val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance("hexagonaldb")
 
     // ---------- User stuff
 
