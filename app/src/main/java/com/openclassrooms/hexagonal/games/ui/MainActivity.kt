@@ -9,10 +9,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.auth.AuthenticationScreen
@@ -37,6 +36,8 @@ class MainActivity : ComponentActivity() {
    */
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+      //init FireBaseApp
+      FirebaseApp.initializeApp(this)
     setContent {
       val navController = rememberNavController()
       HexagonalGamesTheme {
@@ -72,46 +73,45 @@ fun HexagonalGamesNavHost(navHostController: NavHostController,startDestination:
           },
           onMyAccountClick = {
             navHostController.navigate(Screen.MyAccount.route)
-          }
-        ) {
+          }, onFABClick = {
+            //todo -- simple test add entry in DB
 
 
-
-//todo -- simple test add entry in DB
-
-          val currentUser = FirebaseAuth.getInstance().currentUser
-          if (currentUser == null) {
-            Log.e("DBs", "No user is authenticated!")
-          } else {
-            Log.d("DBs", "Authenticated user: ${currentUser.uid}")
-
-
-            val db = Firebase.firestore
-            val db2 = FirebaseFirestore.getInstance()
-            Log.d("DBs", "TRY UPDATE DB ...")
-            db.collection("user")
-              .document(currentUser.uid)
-              .set(mapOf("firstname" to "tester","lastname" to "family"))
-              .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                  Log.d("DBs", "User successfully added to Firestore.")
+                val currentUser = FirebaseAuth.getInstance().currentUser
+                if (currentUser == null) {
+                    Log.e("DBs", "No user is authenticated!")
                 } else {
-                  Log.e("DBs","Error task adding user to Firestore: ${task.exception}",task.exception)
+                    Log.d("DBs", "Authenticated user: ${currentUser.uid}")
+
+
+                   // val db = Firebase.firestore
+                    val db = FirebaseFirestore.getInstance("hexagonaldb")
+                    Log.d("DBs", "TRY UPDATE DB ...")
+                    db.collection("users")
+                        .document(currentUser.uid)
+                        .set(mapOf("firstname" to "tester","lastname" to "family"))
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.d("DBs", "User successfully added to Firestore.")
+                            } else {
+                                Log.e("DBs","Error task adding user to Firestore: ${task.exception}",task.exception)
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("DBs", "Error adding user to Firestore: $exception", exception)
+                        }
+
+
                 }
-              }
-              .addOnFailureListener { exception ->
-                Log.e("DBs", "Error adding user to Firestore: $exception", exception)
-              }
 
-
-          }
-
-//todo to uncomment after test ---------------------
-
+            //todo to uncomment after test ---------------------
 //            navHostController.navigate(Screen.AddPost.route)
+            }
+        )
 
 
-        }
+
+
       }
       //-- Add Post Screen
       composable(route = Screen.AddPost.route) {
