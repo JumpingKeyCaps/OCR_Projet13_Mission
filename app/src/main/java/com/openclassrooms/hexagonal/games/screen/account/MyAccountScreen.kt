@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.designcomponents.CustomShapeComponent
@@ -203,7 +204,7 @@ fun MyAccountScreen(
             onDismiss = { showDeleteAccountDialog = false },
             onValidate = {
                 //logout
-                viewModel.deleteUserAccount()
+                viewModel.deleteUserAccount(user = FirebaseAuth.getInstance().currentUser)
                 showDeleteAccountDialog = false
                 coroutineScope.launch {
                     snackBarHostState.showSnackbar("Suppression de votre compte en cours...")
