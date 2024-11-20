@@ -43,8 +43,8 @@ class AuthRepository @Inject constructor(private val authService: FirebaseAuthSe
      * Delete the current user account.
      * @return A flow emitting the result of the account deletion operation.
      */
-    fun deleteUserAccount(): Flow<Result<Unit>> = flow {
-        emit(authService.deleteUserAccount())
+    fun deleteUserAccount(user: FirebaseUser): Flow<Result<Unit>> = flow {
+        emit(authService.deleteUserAccount(user))
     }
 
     /**
