@@ -25,7 +25,7 @@ class UserStoreRepository @Inject constructor(private val firestoreService: Fire
      * @param onSuccess Callback to be executed on successful retrieval.
      * @param onFailure Callback to be executed on failure.
      */
-    fun getUsers(userId: String, onSuccess: (User) -> Unit, onFailure: (Exception) -> Unit) {
+    fun getUser(userId: String, onSuccess: (User) -> Unit, onFailure: (Exception) -> Unit) {
         firestoreService.getUserById(userId,onSuccess, onFailure)
     }
 
