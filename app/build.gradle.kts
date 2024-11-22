@@ -49,6 +49,7 @@ dependencies {
   //DI
   implementation(libs.hilt)
   implementation(libs.firebase.auth.ktx)
+  implementation(libs.firebase.storage.ktx)
   ksp(libs.hilt.compiler)
   implementation(libs.hilt.navigation.compose)
 
@@ -80,6 +81,11 @@ dependencies {
   implementation (libs.accompanist.pager)
   implementation (libs.accompanist.pager.indicators)
 
+
+  //core-ktx
+  implementation ("androidx.core:core-ktx:1.12.0")
+  //to persistence of  notification preference of the user
+  implementation ("androidx.datastore:datastore-preferences:1.1.1")
 
   // --------------- [FireBase Stuff]
   implementation(platform(libs.firebase.bom))
