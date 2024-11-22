@@ -1,13 +1,20 @@
 package com.openclassrooms.hexagonal.games.ui
 
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.hexagonal.games.screen.Screen
@@ -15,6 +22,7 @@ import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.auth.AuthenticationScreen
 import com.openclassrooms.hexagonal.games.screen.account.MyAccountScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
+import com.openclassrooms.hexagonal.games.screen.postdetails.PostDetailsScreen
 import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +50,11 @@ class MainActivity : ComponentActivity() {
         HexagonalGamesNavHost(
           navHostController = navController,
           // Check if the user is logged in or not to set the start destination
-          startDestination = if (FirebaseAuth.getInstance().currentUser == null) Screen.Authentication.route else Screen.Homefeed.route
+          startDestination = if (FirebaseAuth.getInstance().currentUser == null){
+            Screen.Authentication.route
+          } else{
+            Screen.Homefeed.route
+          }
         )
       }
     }
@@ -63,8 +75,8 @@ fun HexagonalGamesNavHost(navHostController: NavHostController,startDestination:
     //-- HomeFeed Screen
       composable(route = Screen.Homefeed.route) {
         HomefeedScreen(
-          onPostClick = {
-            //TODO
+          onPostClick = {post ->
+            navHostController.navigate(Screen.PostDetails.createRoute(post.id))
           },
           onSettingsClick = {
             navHostController.navigate(Screen.Settings.route)
@@ -80,13 +92,16 @@ fun HexagonalGamesNavHost(navHostController: NavHostController,startDestination:
       composable(route = Screen.AddPost.route) {
         AddScreen(
           onBackClick = { navHostController.navigateUp() },
-          onSaveClick = { navHostController.navigateUp() }
+          onSaveClick = { navHostController.navigateUp() },
+          userAuthId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         )
       }
       //-- Settings Screen
       composable(route = Screen.Settings.route) {
+        val context = LocalContext.current
         SettingsScreen(
-          onBackClick = { navHostController.navigateUp() }
+          onBackClick = { navHostController.navigateUp() },
+          onRequestNotificationAccess = { navigateToNotificationSettings(context) }
         )
       }
       //-- Authentication Screen
@@ -108,5 +123,36 @@ fun HexagonalGamesNavHost(navHostController: NavHostController,startDestination:
           user = FirebaseAuth.getInstance().currentUser
         )
       }
+      //Post Details screen
+      composable(
+        route = Screen.PostDetails.route,
+        arguments = listOf(navArgument("postId") { type = NavType.StringType })
+      ) { backStackEntry ->
+        PostDetailsScreen(
+          postId = backStackEntry.arguments?.getString("postId") ?: "",
+          onBackClick = { navHostController.navigateUp() },
+          userAuthId = FirebaseAuth.getInstance().currentUser?.uid
+        )
+      }
+
+
     }
+}
+
+/**
+ * Navigate to the notification settings screen of the phone.
+ * @param context The context of the app.
+ */
+fun navigateToNotificationSettings(context: Context) {
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    // Pour Android Oreo (API 26) et supérieur, ouvre les paramètres de notifications de l'application
+    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+      putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+    }
+    context.startActivity(intent)
+  } else {
+    // Pour les versions antérieures, redirige vers les paramètres généraux (plus limité)
+    val intent = Intent(Settings.ACTION_SETTINGS)
+    context.startActivity(intent)
+  }
 }
