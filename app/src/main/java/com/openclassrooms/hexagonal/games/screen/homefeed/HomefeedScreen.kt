@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
@@ -30,11 +31,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
@@ -131,7 +134,6 @@ fun HomefeedScreen(
     }
   ) { contentPadding ->
     val posts by viewModel.posts.collectAsStateWithLifecycle()
-    
     HomefeedList(
       modifier = modifier.padding(contentPadding),
       posts = posts,
@@ -147,8 +149,8 @@ private fun HomefeedList(
   onPostClick: (Post) -> Unit,
 ) {
   LazyColumn(
-    modifier = modifier.padding(8.dp),
-    verticalArrangement = Arrangement.spacedBy(8.dp),
+    modifier = modifier.padding(8.dp,0.dp,8.dp,0.dp),
+    verticalArrangement = Arrangement.spacedBy(2.dp),
   ) {
     items(posts) { post ->
       HomefeedCell(
@@ -165,14 +167,15 @@ private fun HomefeedCell(
   onPostClick: (Post) -> Unit,
 ) {
   ElevatedCard(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier.fillMaxWidth().padding(0.dp,4.dp,0.dp,4.dp),
     onClick = {
       onPostClick(post)
     }) {
     Column(
-      modifier = Modifier.padding(8.dp),
+      modifier = Modifier.padding(12.dp,8.dp,12.dp,8.dp),
     ) {
       Text(
+        modifier = Modifier.padding(top = 4.dp),
         text = stringResource(
           id = R.string.by,
           post.author?.firstname ?: "",
@@ -190,7 +193,8 @@ private fun HomefeedCell(
             .padding(top = 8.dp)
             .fillMaxWidth()
             .heightIn(max = 200.dp)
-            .aspectRatio(ratio = 16 / 9f),
+            .aspectRatio(ratio = 16 / 9f)
+            .clip(RoundedCornerShape(8.dp)),
           model = post.photoUrl,
           imageLoader = LocalContext.current.imageLoader.newBuilder()
             .logger(DebugLogger())
@@ -202,8 +206,11 @@ private fun HomefeedCell(
       }
       if (post.description.isNullOrEmpty() == false) {
         Text(
+          modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
           text = post.description,
-          style = MaterialTheme.typography.bodyMedium
+          style = MaterialTheme.typography.bodyMedium,
+          maxLines = 3,  // Limite à 3 lignes
+          overflow = TextOverflow.Ellipsis
         )
       }
     }
