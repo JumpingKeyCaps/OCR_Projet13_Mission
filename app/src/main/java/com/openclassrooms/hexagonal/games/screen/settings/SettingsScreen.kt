@@ -48,7 +48,7 @@ fun SettingsScreen(
   onBackClick: () -> Unit,
   onRequestNotificationAccess: () -> Unit
 ) {
-  val areNotificationsEnabled by viewModel.areNotificationsEnabled.collectAsState(initial = true)
+  val areNotificationsEnabled by viewModel.areNotificationsEnabled.collectAsState(initial = false)
   Scaffold(
     modifier = modifier,
     topBar = {
