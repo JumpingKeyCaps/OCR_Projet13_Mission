@@ -58,10 +58,9 @@ class FirebaseAuthService {
      * Method to delete the current user account.
      * @return a response of the final state of the account deletion operation.
      */
-    suspend fun deleteUserAccount(): Result<Unit> {
+    suspend fun deleteUserAccount(user: FirebaseUser): Result<Unit> {
         return try {
-            val user = auth.currentUser
-            user?.delete()?.await()
+            user.delete().await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

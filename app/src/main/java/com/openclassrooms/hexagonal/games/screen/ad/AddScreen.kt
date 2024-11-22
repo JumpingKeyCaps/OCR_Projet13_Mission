@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,13 +37,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 
+/**
+ * Composable function to display the Add new post screen.
+ * @param modifier Modifier for styling and layout.
+ * @param viewModel ViewModel associated with the screen.
+ * @param onBackClick callback to handle the back button click.
+ * @param onSaveClick callback to handle the save button click.
+ * @param userAuthId ID of the authenticated user.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreen(
   modifier: Modifier = Modifier,
   viewModel: AddViewModel = hiltViewModel(),
   onBackClick: () -> Unit,
-  onSaveClick: () -> Unit
+  onSaveClick: () -> Unit,
+  userAuthId: String
 ) {
   Scaffold(
     modifier = modifier,
@@ -62,7 +76,7 @@ fun AddScreen(
   ) { contentPadding ->
     val post by viewModel.post.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
-    
+
     CreatePost(
       modifier = Modifier.padding(contentPadding),
       error = error,
@@ -70,14 +84,25 @@ fun AddScreen(
       onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
       description = post.description ?: "",
       onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
-      onSaveClicked = {
-        viewModel.addPost()
+      onSaveClicked = {uri->
+        viewModel.addPost(userAuthId,uri)
         onSaveClick()
       }
     )
   }
 }
 
+
+/**
+ * Composable function to create a new post.
+ * @param modifier Modifier for styling and layout.
+ * @param title Title of the post.
+ * @param onTitleChanged callback to handle title changes.
+ * @param description Description of the post.
+ * @param onDescriptionChanged callback to handle description changes.
+ * @param onSaveClicked callback to handle save button click.
+ * @param error Error state of the form.
+ */
 @Composable
 private fun CreatePost(
   modifier: Modifier = Modifier,
@@ -85,10 +110,11 @@ private fun CreatePost(
   onTitleChanged: (String) -> Unit,
   description: String,
   onDescriptionChanged: (String) -> Unit,
-  onSaveClicked: () -> Unit,
+  onSaveClicked: (Uri?) -> Unit,
   error: FormError?
 ) {
   val scrollState = rememberScrollState()
+  var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
   
   Column(
     modifier = modifier
@@ -128,10 +154,16 @@ private fun CreatePost(
         label = { Text(stringResource(id = R.string.hint_description)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
       )
+      ImagePickerButton(
+        onImageSelected = { uri->
+          Log.d("ImagePickerButton", "Selected image URI: $uri")
+          selectedImageUri = uri
+        }
+      )
     }
     Button(
       enabled = error == null,
-      onClick = { onSaveClicked() }
+      onClick = { onSaveClicked(selectedImageUri) }
     ) {
       Text(
         modifier = Modifier.padding(8.dp),
@@ -140,6 +172,9 @@ private fun CreatePost(
     }
   }
 }
+
+
+
 
 @PreviewLightDark
 @PreviewScreenSizes

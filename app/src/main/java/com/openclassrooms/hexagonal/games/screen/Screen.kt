@@ -16,4 +16,7 @@ sealed class Screen(
 
   data object MyAccount : Screen("myAccount")
 
+  data object PostDetails : Screen("postDetails/{postId}") {
+    fun createRoute(postId: String): String = "postDetails/$postId"
+  }
 }
