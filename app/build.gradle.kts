@@ -63,29 +63,26 @@ dependencies {
   implementation(libs.lifecycle.runtime.compose)
   debugImplementation(libs.compose.ui.tooling)
   debugImplementation(libs.compose.ui.test.manifest)
-
   implementation(libs.activity.compose)
   implementation(libs.navigation.compose)
-  
+
+  //Coroutines
   implementation(libs.kotlinx.coroutines.android)
-  
+
+  //Coil
   implementation(libs.coil.compose)
   implementation(libs.accompanist.permissions)
 
-  testImplementation(libs.junit)
-  androidTestImplementation(libs.ext.junit)
-  androidTestImplementation(libs.espresso.core)
 
-
-  //- compose Pager
+  //Pager
   implementation (libs.accompanist.pager)
   implementation (libs.accompanist.pager.indicators)
 
 
-  //core-ktx
+  //Core-ktx
   implementation ("androidx.core:core-ktx:1.12.0")
-  //to persistence of  notification preference of the user
-  implementation ("androidx.datastore:datastore-preferences:1.1.1")
+  //DataStore to persistence of  notification preference of the user
+  implementation (libs.datastore.preferences)
 
   // --------------- [FireBase Stuff]
   implementation(platform(libs.firebase.bom))
@@ -99,4 +96,21 @@ dependencies {
   implementation (libs.firebase.messaging)
   // - FireStore
   implementation (libs.firebase.firestore)
+
+
+
+  //----------------- Tests
+
+  testImplementation(libs.junit)
+  androidTestImplementation(libs.ext.junit)
+  androidTestImplementation(libs.espresso.core)
+
+  testImplementation (libs.kotlinx.coroutines.test)
+  testImplementation (libs.mockk)
+
+
+  testImplementation (libs.mockito.inline)
+  testImplementation (libs.mockito.core)
+  testImplementation (libs.mockito.kotlin)
+
 }
