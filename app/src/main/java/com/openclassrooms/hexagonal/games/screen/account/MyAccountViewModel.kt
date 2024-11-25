@@ -64,7 +64,7 @@ class MyAccountViewModel @Inject constructor(private val authRepository: AuthRep
      * Removes the user account from the Authentication.
      * @param user The user to be removed.
      */
-    private fun removeUserAuth(user: FirebaseUser) {
+     fun removeUserAuth(user: FirebaseUser) {
         viewModelScope.launch {
             //remove user in the Authentication
             authRepository.deleteUserAccount(user)
