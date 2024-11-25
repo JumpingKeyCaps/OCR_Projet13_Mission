@@ -43,11 +43,10 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
                         val user = result.getOrNull()
                         if (user != null) {
                             //Add user in DataBase
-                            Log.d("DBUSR", "signUpUser: add user to DB ...")
                             userRepository.addUser(
                                 User(user.uid,firstName,lastName),
-                                {Log.d("DBUSR", "signUpUser: OK ! user is added to DB !")},
-                                {Log.d("DBUSR", "signUpUser: FAIL ! user is not added to DB !")}
+                                {},
+                                {}
                             )
                         }
 
@@ -77,7 +76,6 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
       * Sends a password reset email to the provided email address.
       * @param email The email address to send the reset email to.
       */
-     // Méthode pour envoyer un email de réinitialisation du mot de passe
      fun sendPasswordResetEmail(email: String) {
          viewModelScope.launch {
              authRepository.sendPasswordResetEmail(email)
